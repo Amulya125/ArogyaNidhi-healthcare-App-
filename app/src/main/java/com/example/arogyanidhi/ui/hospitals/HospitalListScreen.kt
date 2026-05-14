@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.arogyanidhi.domain.model.Hospital
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,93 +30,291 @@ fun HospitalListScreen(
     viewModel: HospitalViewModel,
     onNavigateBack: () -> Unit
 ) {
+
     val hospitals by viewModel.hospitals.collectAsState()
+
     val isLocationEnabled by viewModel.isLocationEnabled.collectAsState()
+
+    val selectedDistrict by viewModel.searchDistrict.collectAsState()
+
     val context = LocalContext.current
-    
-    val locationPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestMultiplePermissions()
-    ) { permissions ->
-        val granted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
-                      permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
-        if (granted) {
-            viewModel.toggleLocation(true)
-        } else {
-            viewModel.toggleLocation(false)
-        }
+
+    val districts = listOf(
+
+        "All Districts",
+
+        "Bagalkote",
+        "Ballari",
+        "Belagavi",
+        "Bangalore Rural",
+        "Bangalore Urban",
+        "Bidar",
+        "Chamarajanagar",
+        "Chikkaballapur",
+        "Chikkamagaluru",
+        "Chitradurga",
+        "Dakshina Kannada",
+        "Davanagere",
+        "Dharwad",
+        "Gadag",
+        "Hassan",
+        "Haveri",
+        "Kalaburagi",
+        "Kodagu",
+        "Kolar",
+        "Koppal",
+        "Mandya",
+        "Mysuru",
+        "Raichur",
+        "Ramanagara",
+        "Shivamogga",
+        "Tumakuru",
+        "Udupi",
+        "Uttara Kannada",
+        "Vijayapura",
+        "Yadgir"
+    )
+
+    var expanded by remember {
+        mutableStateOf(false)
     }
+
+    val locationPermissionLauncher =
+        rememberLauncherForActivityResult(
+            contract =
+                ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+
+            val granted =
+                permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+                        permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+
+            if (granted) {
+
+                viewModel.toggleLocation(true)
+
+            } else {
+
+                viewModel.toggleLocation(false)
+            }
+        }
 
     Scaffold(
         topBar = {
+
             TopAppBar(
-                title = { Text("Hospitals & Clinics") },
+                title = {
+                    Text("Empanelled Hospitals")
+                },
+
                 navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+
+                    IconButton(
+                        onClick = onNavigateBack
+                    ) {
+
+                        Icon(
+                            Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back"
+                        )
                     }
                 },
+
                 actions = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+
                         Text(
-                            text = if (isLocationEnabled) "GPS On" else "GPS Off",
+                            text =
+                                if (isLocationEnabled)
+                                    "GPS On"
+                                else
+                                    "GPS Off",
+
                             style = MaterialTheme.typography.labelMedium,
-                            color = if (isLocationEnabled) MaterialTheme.colorScheme.primary else Color.Gray
+
+                            color =
+                                if (isLocationEnabled)
+                                    MaterialTheme.colorScheme.primary
+                                else
+                                    Color.Gray
                         )
+
                         Switch(
                             checked = isLocationEnabled,
+
                             onCheckedChange = { enabled ->
+
                                 if (enabled) {
+
                                     locationPermissionLauncher.launch(
                                         arrayOf(
                                             Manifest.permission.ACCESS_FINE_LOCATION,
                                             Manifest.permission.ACCESS_COARSE_LOCATION
                                         )
                                     )
+
                                 } else {
+
                                     viewModel.toggleLocation(false)
                                 }
                             },
+
                             modifier = Modifier.scale(0.7f)
                         )
                     }
                 }
             )
         }
+
     ) { padding ->
-        Column(modifier = Modifier.padding(padding)) {
-            if (isLocationEnabled) {
-                Surface(
-                    color = MaterialTheme.colorScheme.secondaryContainer,
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding)
+        ) {
+
+            Text(
+                text = "Search Hospitals by District",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(
+                    start = 16.dp,
+                    top = 16.dp,
+                    bottom = 8.dp
+                )
+            )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+
+                OutlinedButton(
+                    onClick = {
+                        expanded = true
+                    },
+
                     modifier = Modifier.fillMaxWidth()
                 ) {
+
                     Text(
-                        text = "Showing hospitals within 100km radius",
+                        text =
+                            if (selectedDistrict.isBlank())
+                                "Select District"
+                            else
+                                selectedDistrict
+                    )
+                }
+
+                DropdownMenu(
+                    expanded = expanded,
+
+                    onDismissRequest = {
+                        expanded = false
+                    }
+                ) {
+
+                    districts.forEach { district ->
+
+                        DropdownMenuItem(
+                            text = {
+                                Text(district)
+                            },
+
+                            onClick = {
+
+                                expanded = false
+
+                                if (district == "All Districts") {
+
+                                    viewModel.updateDistrictSearch("")
+
+                                } else {
+
+                                    viewModel.updateDistrictSearch(
+                                        district
+                                    )
+                                }
+                            }
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            if (isLocationEnabled) {
+
+                Surface(
+                    color = MaterialTheme.colorScheme.secondaryContainer,
+
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+
+                    Text(
+                        text = "Showing nearby hospitals within 100 km",
+
                         modifier = Modifier.padding(8.dp),
+
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
+
+                        color =
+                            MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 }
             }
 
             if (hospitals.isEmpty()) {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("No hospitals found nearby.")
+
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+
+                    contentAlignment = Alignment.Center
+                ) {
+
+                    Text(
+                        text = "No hospitals found."
+                    )
                 }
+
             } else {
+
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = 16.dp)
                 ) {
+
                     items(hospitals) { hospital ->
+
                         HospitalCard(
                             hospital = hospital,
-                            distance = viewModel.getDistance(hospital),
+
+                            distance =
+                                viewModel.getDistance(hospital),
+
                             onNavigateClick = {
-                                val uri = Uri.parse("google.navigation:q=${hospital.latitude},${hospital.longitude}")
-                                val mapIntent = Intent(Intent.ACTION_VIEW, uri)
-                                mapIntent.setPackage("com.google.android.apps.maps")
-                                context.startActivity(mapIntent)
+
+                                val uri = Uri.parse(
+                                    "google.navigation:q=${hospital.latitude},${hospital.longitude}"
+                                )
+
+                                val intent =
+                                    Intent(
+                                        Intent.ACTION_VIEW,
+                                        uri
+                                    )
+
+                                intent.setPackage(
+                                    "com.google.android.apps.maps"
+                                )
+
+                                context.startActivity(intent)
                             }
                         )
                     }
@@ -127,98 +326,163 @@ fun HospitalListScreen(
 
 @Composable
 fun HospitalCard(
-    hospital: com.example.arogyanidhi.domain.model.Hospital,
+    hospital: Hospital,
     distance: String,
     onNavigateClick: () -> Unit
 ) {
+
     Card(
         modifier = Modifier
-            .padding(vertical = 8.dp)
-            .fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+
+        elevation =
+            CardDefaults.cardElevation(
+                defaultElevation = 3.dp
+            )
     ) {
-        Column(modifier = Modifier.padding(16.dp)) {
+
+        Column(
+            modifier = Modifier.padding(16.dp)
+        ) {
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+
+                horizontalArrangement =
+                    Arrangement.SpaceBetween,
+
+                verticalAlignment =
+                    Alignment.CenterVertically
             ) {
+
                 Text(
                     text = hospital.name,
-                    style = MaterialTheme.typography.titleMedium,
+
+                    style =
+                        MaterialTheme.typography.titleMedium,
+
                     fontWeight = FontWeight.Bold,
+
                     modifier = Modifier.weight(1f)
                 )
+
                 if (distance.isNotEmpty()) {
+
                     Surface(
-                        color = MaterialTheme.colorScheme.primaryContainer,
-                        shape = MaterialTheme.shapes.small
+                        color =
+                            MaterialTheme.colorScheme.primaryContainer,
+
+                        shape =
+                            MaterialTheme.shapes.small
                     ) {
+
                         Text(
                             text = distance,
-                            style = MaterialTheme.typography.labelSmall,
-                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+
+                            modifier = Modifier.padding(
+                                horizontal = 8.dp,
+                                vertical = 4.dp
+                            ),
+
+                            style =
+                                MaterialTheme.typography.labelSmall
                         )
                     }
                 }
             }
-            
-            Spacer(modifier = Modifier.height(4.dp))
-            
+
+            Spacer(modifier = Modifier.height(6.dp))
+
             Text(
-                text = "${hospital.type} • ${hospital.district}",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.secondary
+                text =
+                    "${hospital.type} • ${hospital.district}",
+
+                style =
+                    MaterialTheme.typography.bodyMedium,
+
+                color =
+                    MaterialTheme.colorScheme.secondary
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
-            Row(verticalAlignment = Alignment.CenterVertically) {
+
+            Row(
+                verticalAlignment =
+                    Alignment.CenterVertically
+            ) {
+
                 Icon(
                     Icons.Default.LocationOn,
+
                     contentDescription = null,
+
                     modifier = Modifier.size(16.dp),
+
                     tint = Color.Gray
                 )
+
                 Spacer(modifier = Modifier.width(4.dp))
+
                 Text(
                     text = hospital.address,
-                    style = MaterialTheme.typography.bodySmall,
+
+                    style =
+                        MaterialTheme.typography.bodySmall,
+
                     modifier = Modifier.weight(1f)
                 )
             }
-            
-            Spacer(modifier = Modifier.height(4.dp))
-            
+
+            Spacer(modifier = Modifier.height(6.dp))
+
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.Bottom
+                verticalAlignment =
+                    Alignment.CenterVertically
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(
-                        Icons.Default.Phone,
-                        contentDescription = null,
-                        modifier = Modifier.size(16.dp),
-                        tint = Color.Gray
+
+                Icon(
+                    Icons.Default.Phone,
+
+                    contentDescription = null,
+
+                    modifier = Modifier.size(16.dp),
+
+                    tint = Color.Gray
+                )
+
+                Spacer(modifier = Modifier.width(4.dp))
+
+                Text(
+                    text = hospital.contact,
+
+                    style =
+                        MaterialTheme.typography.bodySmall,
+
+                    color =
+                        MaterialTheme.colorScheme.primary
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Button(
+                onClick = onNavigateClick,
+
+                modifier =
+                    Modifier.align(
+                        Alignment.End
                     )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = hospital.contact,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-                
-                Button(
-                    onClick = onNavigateClick,
-                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 0.dp),
-                    modifier = Modifier.height(32.dp)
-                ) {
-                    Icon(Icons.Default.Directions, contentDescription = null, modifier = Modifier.size(16.dp))
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("Navigate", style = MaterialTheme.typography.labelMedium)
-                }
+            ) {
+
+                Icon(
+                    Icons.Default.Directions,
+                    contentDescription = null
+                )
+
+                Spacer(modifier = Modifier.width(6.dp))
+
+                Text("Navigate")
             }
         }
     }
