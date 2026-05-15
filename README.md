@@ -150,20 +150,33 @@ https://appetize.io/app/b_ypnmiu3qzaydmf5mvvz6hxxpii
 
 ## Screenshots
 
-- login page- [![img.png](img.png)]
-- home screen- [![img_1.png](img_1.png)]
-- eligibility checker- question 1[![img_2.png](img_2.png)]
--                     -question 2[![img_3.png](img_3.png)]
--                     -question 3[![img_4.png](img_4.png)]
--                     -question 4[![img_5.png](img_5.png)]
--                     -question 5[![img_6.png](img_6.png)]
-- eligibile schemes after quiz- [![img_7.png](img_7.png)]
-- empanelled hospitals-[![img_8.png](img_8.png)]
-- search hospitals by district -[![img_9.png](img_9.png)]
-- all government schemes - [![img_10.png](img_10.png)] 
-- document checklist - [![img_11.png](img_11.png)]
-- profile-[![img_12.png](img_12.png)]
-- AI chatbot-[![img_13.png](img_13.png)]
+### login page
+![login page](screenshots/login page.png)
+
+### Home Screen
+![Home](screenshots/home page.png)
+
+### Eligibility checker quiz
+![eligibility checker- question 1](screenshots/eligibility quiz 1.png)
+![eligibility checker- question 2](screenshots/eligibility quiz 2.png)
+![eligibility checker- question 3](screenshots/eligibility quiz 3.png)
+![eligibility checker- question 4](screenshots/eligibility quiz 4.png)
+![eligibility checker- question 5](screenshots/eligibility quiz 5.png)
+![eligibile schemes after quiz](screenshots/eligibile schemes.png)
+
+### Empanelled Hospitals 
+![empanelled hospitals](screenshots/empanelled hospitals.png)
+![search hospitals by district](screenshots/search hospital by district.png)
+
+### Government Schemes
+![all government schemes](screenshots/all government schemes.png)
+![document checklist](screenshots/documents checklist.png)
+
+### profile
+![profile](screenshots/profile.png)
+
+### AI chatbot
+![AI chatbot](screenshots/chatbot assistant.png)
 ```
 
 ---
