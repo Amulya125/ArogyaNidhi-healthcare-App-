@@ -151,32 +151,32 @@ https://appetize.io/app/b_ypnmiu3qzaydmf5mvvz6hxxpii
 ## Screenshots
 
 ### login page
-![login page](screenshots/login page.png)
+![login page](screenshots/login_page.png)
 
 ### Home Screen
-![Home](screenshots/home page.png)
+![Home](screenshots/home_page.png)
 
 ### Eligibility checker quiz
-![eligibility checker- question 1](screenshots/eligibility quiz 1.png)
-![eligibility checker- question 2](screenshots/eligibility quiz 2.png)
-![eligibility checker- question 3](screenshots/eligibility quiz 3.png)
-![eligibility checker- question 4](screenshots/eligibility quiz 4.png)
-![eligibility checker- question 5](screenshots/eligibility quiz 5.png)
-![eligibile schemes after quiz](screenshots/eligibile schemes.png)
+![eligibility checker- question 1](screenshots/eligibility_quiz1.png)
+![eligibility checker- question 2](screenshots/eligibility_quiz2.png)
+![eligibility checker- question 3](screenshots/eligibility_quiz3.png)
+![eligibility checker- question 4](screenshots/eligibility_quiz4.png)
+![eligibility checker- question 5](screenshots/eligibility_quiz5.png)
+![eligibile schemes after quiz](screenshots/eligibile_schemes.png)
 
 ### Empanelled Hospitals 
-![empanelled hospitals](screenshots/empanelled hospitals.png)
-![search hospitals by district](screenshots/search hospital by district.png)
+![empanelled hospitals](screenshots/empanelled_hospitals.png)
+![search hospitals by district](screenshots/search_hospital_by_district.png)
 
 ### Government Schemes
-![all government schemes](screenshots/all government schemes.png)
-![document checklist](screenshots/documents checklist.png)
+![all government schemes](screenshots/all_government_schemes.png)
+![document checklist](screenshots/documents_checklist.png)
 
 ### profile
 ![profile](screenshots/profile.png)
 
 ### AI chatbot
-![AI chatbot](screenshots/chatbot assistant.png)
+![AI chatbot](screenshots/chatbot_assistant.png)
 ```
 
 ---
